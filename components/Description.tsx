@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicDescription,
   DefaultDescriptionProps
-} from "./plasmic/katibe/PlasmicDescription";
+} from "./plasmic/katibe_nelson/PlasmicDescription";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can

@@ -2,9 +2,9 @@
 // This file is owned by you, feel free to edit as you see fit.
 import * as React from "react";
 import { PageParamsProvider as PageParamsProvider__ } from "@plasmicapp/react-web/lib/host";
-import GlobalContextsProvider from "../../components/plasmic/katibe/PlasmicGlobalContextsProvider";
+import GlobalContextsProvider from "../../components/plasmic/katibe_nelson/PlasmicGlobalContextsProvider";
 
-import { PlasmicFactorPrint } from "../../components/plasmic/katibe/PlasmicFactorPrint";
+import { PlasmicFactorPrint } from "../../components/plasmic/katibe_nelson/PlasmicFactorPrint";
 import { useRouter } from "next/router";
 
 function FactorPrint() {

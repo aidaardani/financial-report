@@ -2,9 +2,9 @@
 // This file is owned by you, feel free to edit as you see fit.
 import * as React from "react";
 import { PageParamsProvider as PageParamsProvider__ } from "@plasmicapp/react-web/lib/host";
-import GlobalContextsProvider from "../../components/plasmic/katibe/PlasmicGlobalContextsProvider";
+import GlobalContextsProvider from "../../components/plasmic/katibe_nelson/PlasmicGlobalContextsProvider";
 
-import { PlasmicFactorsSearch } from "../../components/plasmic/katibe/PlasmicFactorsSearch";
+import { PlasmicFactorsSearch } from "../../components/plasmic/katibe_nelson/PlasmicFactorsSearch";
 import { useRouter } from "next/router";
 
 function FactorsSearch() {

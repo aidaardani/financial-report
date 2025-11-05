@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicDialog2,
   DefaultDialog2Props
-} from "./plasmic/katibe/PlasmicDialog2";
+} from "./plasmic/katibe_nelson/PlasmicDialog2";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
