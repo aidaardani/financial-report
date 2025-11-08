@@ -60,6 +60,10 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ApiRequest } from "@/fragment/components/api-request"; // plasmic-import: 1e0q7f6tCMQt/codeComponent
+import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import TransferToAnotherWallet from "../../TransferToAnotherWallet"; // plasmic-import: OwsFE4Jz_JMm/component
+import Settlement from "../../Settlement"; // plasmic-import: 1Tzg-xPJwovd/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: oFMww5CfyAzvgggjKwbJid/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: oFMww5CfyAzvgggjKwbJid/styleTokensProvider
 
@@ -67,6 +71,9 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: oFMww5CfyAzvgggjKwbJid/projectcss
 import sty from "./PlasmicFinancialReports.module.css"; // plasmic-import: Nu0oYJ_Bbm-G/css
+
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -94,13 +101,18 @@ export type PlasmicFinancialReports__OverridesType = {
   apiGetBalanceOnlineVisit?: Flex__<typeof ApiRequest>;
   apiGetTotalOnlineVisit?: Flex__<typeof ApiRequest>;
   apiGetTotal?: Flex__<typeof ApiRequest>;
-  freeBox?: Flex__<"div">;
-  bookcount?: Flex__<"div">;
-  income?: Flex__<"div">;
-  balance?: Flex__<"div">;
-  balance2?: Flex__<"div">;
-  totalincome?: Flex__<"div">;
   apiExpectedIncome?: Flex__<typeof ApiRequest>;
+  bookcount?: Flex__<"div">;
+  balance?: Flex__<"div">;
+  dialogTransfer?: Flex__<typeof Dialog>;
+  button?: Flex__<typeof Button>;
+  transferToAnotherWallet?: Flex__<typeof TransferToAnotherWallet>;
+  dialogSettlement?: Flex__<typeof Dialog>;
+  btnSettlement?: Flex__<typeof Button>;
+  settlement?: Flex__<typeof Settlement>;
+  balance2?: Flex__<"div">;
+  income?: Flex__<"div">;
+  totalincome?: Flex__<"div">;
 };
 
 export interface DefaultFinancialReportsProps {
@@ -317,6 +329,43 @@ function PlasmicFinancialReports__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiExpectedIncome"
+      },
+      {
+        path: "dialogTransfer.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "transferToAnotherWallet.transferCenterid",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return $props.centerId == "5532" ? "" : $props.centerId;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()
+      },
+      {
+        path: "transferToAnotherWallet.transferedCount",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "dialogSettlement.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -725,11 +774,72 @@ function PlasmicFinancialReports__RenderFunc(props: {
         })()}
       />
 
-      <div
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        className={classNames(projectcss.all, sty.freeBox)}
-      >
+      <ApiRequest
+        data-plasmic-name={"apiExpectedIncome"}
+        data-plasmic-override={overrides.apiExpectedIncome}
+        className={classNames("__wab_instance", sty.apiExpectedIncome)}
+        errorDisplay={
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text___1SaRk
+            )}
+          >
+            {"Error fetching data"}
+          </div>
+        }
+        loadingDisplay={
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__jkjM2
+            )}
+          >
+            {"Loading..."}
+          </div>
+        }
+        method={"GET"}
+        onError={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "apiExpectedIncome",
+            "error"
+          ]).apply(null, eventArgs);
+        }}
+        onLoading={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "apiExpectedIncome",
+            "loading"
+          ]).apply(null, eventArgs);
+        }}
+        onSuccess={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "apiExpectedIncome",
+            "data"
+          ]).apply(null, eventArgs);
+        }}
+        ref={ref => {
+          $refs["apiExpectedIncome"] = ref;
+        }}
+        url={(() => {
+          try {
+            return $props.centerId !== "5532"
+              ? `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24?productid=7&centerid=${$props.centerId}&account=escrow`
+              : `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24?account=escrow`;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+      />
+
+      <div className={classNames(projectcss.all, sty.freeBox__kYuwF)}>
         <div
           data-plasmic-name={"bookcount"}
           data-plasmic-override={overrides.bookcount}
@@ -776,64 +886,6 @@ function PlasmicFinancialReports__RenderFunc(props: {
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
                       return "\u062a\u0639\u062f\u0627\u062f \u0646\u0648\u0628\u062a \u0627\u0645\u0631\u0648\u0632";
-                    }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
-            </div>
-          ) : null}
-        </div>
-        <div
-          data-plasmic-name={"income"}
-          data-plasmic-override={overrides.income}
-          className={classNames(projectcss.all, sty.income)}
-        >
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__ghfTz
-            )}
-          >
-            {
-              "\u062f\u0631\u0622\u0645\u062f \u0627\u0645\u0631\u0648\u0632 \u062a\u0627 \u0627\u06cc\u0646 \u0644\u062d\u0638\u0647"
-            }
-          </div>
-          {(() => {
-            try {
-              return $state.apiGetIncome.data.sum_cost !== undefined;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })() ? (
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__r7Erz
-              )}
-            >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return (
-                      new Intl.NumberFormat("fa-IR").format(
-                        $state.apiGetIncome.data.sum_cost / 10
-                      ) + " تومان"
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u062f\u0631\u0622\u0645\u062f \u0627\u0645\u0631\u0648\u0632";
                     }
                     throw e;
                   }
@@ -938,7 +990,7 @@ function PlasmicFinancialReports__RenderFunc(props: {
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return "\u0645\u0648\u062c\u0648\u062f\u06cc";
+                      return "0 \u062a\u0648\u0645\u0627\u0646";
                     }
                     throw e;
                   }
@@ -946,29 +998,500 @@ function PlasmicFinancialReports__RenderFunc(props: {
               </React.Fragment>
             </div>
           ) : null}
+          {(() => {
+            try {
+              return (
+                ($props.centerId == "5532"
+                  ? $state.apiGetBalanceOnlineVisit.data?.data?.balance
+                  : $state.apiGetbalance.data.data.balance) > 0
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div className={classNames(projectcss.all, sty.freeBox__kBu21)}>
+              <Dialog
+                data-plasmic-name={"dialogTransfer"}
+                data-plasmic-override={overrides.dialogTransfer}
+                body={
+                  <TransferToAnotherWallet
+                    data-plasmic-name={"transferToAnotherWallet"}
+                    data-plasmic-override={overrides.transferToAnotherWallet}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.transferToAnotherWallet
+                    )}
+                    onTransferCenteridChange={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "transferToAnotherWallet",
+                        "transferCenterid"
+                      ]).apply(null, eventArgs);
+
+                      if (
+                        eventArgs.length > 1 &&
+                        eventArgs[1] &&
+                        eventArgs[1]._plasmic_state_init_
+                      ) {
+                        return;
+                      }
+                    }}
+                    onTransferedCountChange={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "transferToAnotherWallet",
+                        "transferedCount"
+                      ]).apply(null, eventArgs);
+
+                      if (
+                        eventArgs.length > 1 &&
+                        eventArgs[1] &&
+                        eventArgs[1]._plasmic_state_init_
+                      ) {
+                        return;
+                      }
+                    }}
+                    transferCenterid={generateStateValueProp($state, [
+                      "transferToAnotherWallet",
+                      "transferCenterid"
+                    ])}
+                    transferEvent={async () => {
+                      const $steps = {};
+
+                      $steps["closeDialog"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return ($state.dialogTransfer.open = false);
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["closeDialog"] != null &&
+                        typeof $steps["closeDialog"] === "object" &&
+                        typeof $steps["closeDialog"].then === "function"
+                      ) {
+                        $steps["closeDialog"] = await $steps["closeDialog"];
+                      }
+                    }}
+                  />
+                }
+                className={classNames("__wab_instance", sty.dialogTransfer)}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "dialogTransfer",
+                    "open"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+                open={generateStateValueProp($state, [
+                  "dialogTransfer",
+                  "open"
+                ])}
+                title={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__sqlc8
+                    )}
+                  >
+                    {
+                      "\u0627\u0646\u062a\u0642\u0627\u0644 \u0648\u062c\u0647 \u0628\u0647 \u06a9\u0627\u0631\u0628\u0631 \u062f\u06cc\u06af\u0631"
+                    }
+                  </div>
+                }
+                trigger={
+                  (() => {
+                    try {
+                      return !$ctx.GrowthBook.features[
+                        "transfer-to-another-wallet"
+                      ].hide;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <Button
+                      data-plasmic-name={"button"}
+                      data-plasmic-override={overrides.button}
+                      children2={
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text___4WV6S
+                          )}
+                        >
+                          {
+                            "\u0627\u0646\u062a\u0642\u0627\u0644 \u0648\u062c\u0640\u0640\u0647"
+                          }
+                        </div>
+                      }
+                      className={classNames("__wab_instance", sty.button)}
+                      size={"compact"}
+                    />
+                  ) : null
+                }
+              />
+
+              <Dialog
+                data-plasmic-name={"dialogSettlement"}
+                data-plasmic-override={overrides.dialogSettlement}
+                body={
+                  <Settlement
+                    data-plasmic-name={"settlement"}
+                    data-plasmic-override={overrides.settlement}
+                    balance={(() => {
+                      try {
+                        return $props.centerId == "5532"
+                          ? $state.apiGetBalanceOnlineVisit.data?.data?.balance
+                          : $state.apiGetbalance.data.data.balance;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    className={classNames("__wab_instance", sty.settlement)}
+                    currentAccointId={(() => {
+                      try {
+                        return $props.centerId;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    currentAccountType={(() => {
+                      try {
+                        return $props.centerId == "5532" ? "" : "centerid";
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    onSettlement={async () => {
+                      const $steps = {};
+
+                      $steps["updateDialogSettlementOpen"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["dialogSettlement", "open"]
+                              },
+                              operation: 0,
+                              value: false
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateDialogSettlementOpen"] != null &&
+                        typeof $steps["updateDialogSettlementOpen"] ===
+                          "object" &&
+                        typeof $steps["updateDialogSettlementOpen"].then ===
+                          "function"
+                      ) {
+                        $steps["updateDialogSettlementOpen"] =
+                          await $steps["updateDialogSettlementOpen"];
+                      }
+
+                      $steps["runActionOnApiGetbalance"] =
+                        $props.centerId != "5532"
+                          ? (() => {
+                              const actionArgs = {
+                                tplRef: "apiGetbalance",
+                                action: "refresh"
+                              };
+                              return (({ tplRef, action, args }) => {
+                                return $refs?.[tplRef]?.[action]?.(
+                                  ...(args ?? [])
+                                );
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["runActionOnApiGetbalance"] != null &&
+                        typeof $steps["runActionOnApiGetbalance"] ===
+                          "object" &&
+                        typeof $steps["runActionOnApiGetbalance"].then ===
+                          "function"
+                      ) {
+                        $steps["runActionOnApiGetbalance"] =
+                          await $steps["runActionOnApiGetbalance"];
+                      }
+
+                      $steps["runActionOnApiGetBalanceOnlineVisit"] =
+                        $props.centerId == "5532"
+                          ? (() => {
+                              const actionArgs = {
+                                tplRef: "apiGetBalanceOnlineVisit",
+                                action: "refresh"
+                              };
+                              return (({ tplRef, action, args }) => {
+                                return $refs?.[tplRef]?.[action]?.(
+                                  ...(args ?? [])
+                                );
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["runActionOnApiGetBalanceOnlineVisit"] != null &&
+                        typeof $steps["runActionOnApiGetBalanceOnlineVisit"] ===
+                          "object" &&
+                        typeof $steps["runActionOnApiGetBalanceOnlineVisit"]
+                          .then === "function"
+                      ) {
+                        $steps["runActionOnApiGetBalanceOnlineVisit"] =
+                          await $steps["runActionOnApiGetBalanceOnlineVisit"];
+                      }
+                    }}
+                  />
+                }
+                className={classNames("__wab_instance", sty.dialogSettlement)}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "dialogSettlement",
+                    "open"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+                open={generateStateValueProp($state, [
+                  "dialogSettlement",
+                  "open"
+                ])}
+                title={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__zAvKa
+                    )}
+                  >
+                    {
+                      "\u062f\u0631\u062e\u0648\u0627\u0633\u062a \u062a\u0633\u0648\u06cc\u0647 \u062d\u0633\u0627\u0628"
+                    }
+                  </div>
+                }
+                trigger={
+                  <Button
+                    data-plasmic-name={"btnSettlement"}
+                    data-plasmic-override={overrides.btnSettlement}
+                    children2={
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__y4Il3
+                        )}
+                      >
+                        {
+                          "\u062f\u0631\u062e\u0648\u0627\u0633\u062a \u062a\u0633\u0648\u06cc\u0647"
+                        }
+                      </div>
+                    }
+                    className={classNames("__wab_instance", sty.btnSettlement)}
+                    color={"green"}
+                    size={"compact"}
+                  />
+                }
+              />
+            </div>
+          ) : null}
         </div>
+        {(() => {
+          try {
+            return $props.centerId != "5532";
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <div
+            data-plasmic-name={"balance2"}
+            data-plasmic-override={overrides.balance2}
+            className={classNames(projectcss.all, sty.balance2)}
+          >
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__slqAu
+              )}
+            >
+              {
+                "\u0645\u0648\u062c\u0648\u062f\u06cc \u062f\u0631 \u0627\u0646\u062a\u0638\u0627\u0631"
+              }
+            </div>
+            {(() => {
+              try {
+                return (
+                  $state.apiGetbalance.data.data.balance !== undefined &&
+                  $props.centerId != 5532
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__nZLzB
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return (
+                        new Intl.NumberFormat("fa-IR").format(
+                          $state.apiExpectedIncome.data.data.balance / 10
+                        ) + " تومان"
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "\u0645\u0648\u062c\u0648\u062f\u06cc";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+            ) : null}
+            {(() => {
+              try {
+                return (
+                  $state.apiGetbalance.data.data.balance !== undefined &&
+                  $props.centerId == 5532
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__smq6C
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return (
+                        new Intl.NumberFormat("fa-IR").format(
+                          $state.apiExpectedIncome.data.data.balance / 10
+                        ) + " تومان"
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "\u0645\u0648\u062c\u0648\u062f\u06cc";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
         <div
-          data-plasmic-name={"balance2"}
-          data-plasmic-override={overrides.balance2}
-          className={classNames(projectcss.all, sty.balance2)}
+          data-plasmic-name={"income"}
+          data-plasmic-override={overrides.income}
+          className={classNames(projectcss.all, sty.income)}
         >
           <div
             className={classNames(
               projectcss.all,
               projectcss.__wab_text,
-              sty.text__slqAu
+              sty.text__ghfTz
             )}
           >
             {
-              "\u0645\u0648\u062c\u0648\u062f\u06cc \u062f\u0631 \u0627\u0646\u062a\u0638\u0627\u0631"
+              "\u062f\u0631\u0622\u0645\u062f \u0627\u0645\u0631\u0648\u0632 \u062a\u0627 \u0627\u06cc\u0646 \u0644\u062d\u0638\u0647"
             }
           </div>
           {(() => {
             try {
-              return (
-                $state.apiGetbalance.data.data.balance !== undefined &&
-                $props.centerId != 5532
-              );
+              return $state.apiGetIncome.data.sum_cost !== undefined;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -983,7 +1506,7 @@ function PlasmicFinancialReports__RenderFunc(props: {
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text__nZLzB
+                sty.text__r7Erz
               )}
             >
               <React.Fragment>
@@ -991,7 +1514,7 @@ function PlasmicFinancialReports__RenderFunc(props: {
                   try {
                     return (
                       new Intl.NumberFormat("fa-IR").format(
-                        $state.apiExpectedIncome.data.data.balance / 10
+                        $state.apiGetIncome.data.sum_cost / 10
                       ) + " تومان"
                     );
                   } catch (e) {
@@ -999,51 +1522,7 @@ function PlasmicFinancialReports__RenderFunc(props: {
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return "\u0645\u0648\u062c\u0648\u062f\u06cc";
-                    }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
-            </div>
-          ) : null}
-          {(() => {
-            try {
-              return (
-                $state.apiGetbalance.data.data.balance !== undefined &&
-                $props.centerId == 5532
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })() ? (
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__smq6C
-              )}
-            >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return (
-                      new Intl.NumberFormat("fa-IR").format(
-                        $state.apiExpectedIncome.data.data.balance / 10
-                      ) + " تومان"
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u0645\u0648\u062c\u0648\u062f\u06cc";
+                      return "0 \u062a\u0648\u0645\u0627\u0646";
                     }
                     throw e;
                   }
@@ -1142,7 +1621,7 @@ function PlasmicFinancialReports__RenderFunc(props: {
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return "\u06a9\u0644 \u062f\u0631\u0627\u0645\u062f \u0627\u0632 \u0634\u0631\u0648\u0639 \u0647\u0645\u06a9\u0627\u0631\u06cc";
+                      return "0 \u062a\u0648\u0645\u0627\u0646";
                     }
                     throw e;
                   }
@@ -1152,70 +1631,6 @@ function PlasmicFinancialReports__RenderFunc(props: {
           ) : null}
         </div>
       </div>
-      <ApiRequest
-        data-plasmic-name={"apiExpectedIncome"}
-        data-plasmic-override={overrides.apiExpectedIncome}
-        className={classNames("__wab_instance", sty.apiExpectedIncome)}
-        errorDisplay={
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text___1SaRk
-            )}
-          >
-            {"Error fetching data"}
-          </div>
-        }
-        loadingDisplay={
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__jkjM2
-            )}
-          >
-            {"Loading..."}
-          </div>
-        }
-        method={"GET"}
-        onError={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, [
-            "apiExpectedIncome",
-            "error"
-          ]).apply(null, eventArgs);
-        }}
-        onLoading={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, [
-            "apiExpectedIncome",
-            "loading"
-          ]).apply(null, eventArgs);
-        }}
-        onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, [
-            "apiExpectedIncome",
-            "data"
-          ]).apply(null, eventArgs);
-        }}
-        ref={ref => {
-          $refs["apiExpectedIncome"] = ref;
-        }}
-        url={(() => {
-          try {
-            return $props.centerId !== "5532"
-              ? `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24?productid=7&centerid=${$props.centerId}&account=escrow`
-              : `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24?account=escrow`;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-      />
     </div>
   ) as React.ReactElement | null;
 }
@@ -1229,13 +1644,18 @@ const PlasmicDescendants = {
     "apiGetBalanceOnlineVisit",
     "apiGetTotalOnlineVisit",
     "apiGetTotal",
-    "freeBox",
+    "apiExpectedIncome",
     "bookcount",
-    "income",
     "balance",
+    "dialogTransfer",
+    "button",
+    "transferToAnotherWallet",
+    "dialogSettlement",
+    "btnSettlement",
+    "settlement",
     "balance2",
-    "totalincome",
-    "apiExpectedIncome"
+    "income",
+    "totalincome"
   ],
   apiGetBookCount: ["apiGetBookCount"],
   apiGetIncome: ["apiGetIncome"],
@@ -1243,20 +1663,26 @@ const PlasmicDescendants = {
   apiGetBalanceOnlineVisit: ["apiGetBalanceOnlineVisit"],
   apiGetTotalOnlineVisit: ["apiGetTotalOnlineVisit"],
   apiGetTotal: ["apiGetTotal"],
-  freeBox: [
-    "freeBox",
-    "bookcount",
-    "income",
-    "balance",
-    "balance2",
-    "totalincome"
-  ],
+  apiExpectedIncome: ["apiExpectedIncome"],
   bookcount: ["bookcount"],
-  income: ["income"],
-  balance: ["balance"],
+  balance: [
+    "balance",
+    "dialogTransfer",
+    "button",
+    "transferToAnotherWallet",
+    "dialogSettlement",
+    "btnSettlement",
+    "settlement"
+  ],
+  dialogTransfer: ["dialogTransfer", "button", "transferToAnotherWallet"],
+  button: ["button"],
+  transferToAnotherWallet: ["transferToAnotherWallet"],
+  dialogSettlement: ["dialogSettlement", "btnSettlement", "settlement"],
+  btnSettlement: ["btnSettlement"],
+  settlement: ["settlement"],
   balance2: ["balance2"],
-  totalincome: ["totalincome"],
-  apiExpectedIncome: ["apiExpectedIncome"]
+  income: ["income"],
+  totalincome: ["totalincome"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1269,13 +1695,18 @@ type NodeDefaultElementType = {
   apiGetBalanceOnlineVisit: typeof ApiRequest;
   apiGetTotalOnlineVisit: typeof ApiRequest;
   apiGetTotal: typeof ApiRequest;
-  freeBox: "div";
-  bookcount: "div";
-  income: "div";
-  balance: "div";
-  balance2: "div";
-  totalincome: "div";
   apiExpectedIncome: typeof ApiRequest;
+  bookcount: "div";
+  balance: "div";
+  dialogTransfer: typeof Dialog;
+  button: typeof Button;
+  transferToAnotherWallet: typeof TransferToAnotherWallet;
+  dialogSettlement: typeof Dialog;
+  btnSettlement: typeof Button;
+  settlement: typeof Settlement;
+  balance2: "div";
+  income: "div";
+  totalincome: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1346,13 +1777,18 @@ export const PlasmicFinancialReports = Object.assign(
     apiGetBalanceOnlineVisit: makeNodeComponent("apiGetBalanceOnlineVisit"),
     apiGetTotalOnlineVisit: makeNodeComponent("apiGetTotalOnlineVisit"),
     apiGetTotal: makeNodeComponent("apiGetTotal"),
-    freeBox: makeNodeComponent("freeBox"),
-    bookcount: makeNodeComponent("bookcount"),
-    income: makeNodeComponent("income"),
-    balance: makeNodeComponent("balance"),
-    balance2: makeNodeComponent("balance2"),
-    totalincome: makeNodeComponent("totalincome"),
     apiExpectedIncome: makeNodeComponent("apiExpectedIncome"),
+    bookcount: makeNodeComponent("bookcount"),
+    balance: makeNodeComponent("balance"),
+    dialogTransfer: makeNodeComponent("dialogTransfer"),
+    button: makeNodeComponent("button"),
+    transferToAnotherWallet: makeNodeComponent("transferToAnotherWallet"),
+    dialogSettlement: makeNodeComponent("dialogSettlement"),
+    btnSettlement: makeNodeComponent("btnSettlement"),
+    settlement: makeNodeComponent("settlement"),
+    balance2: makeNodeComponent("balance2"),
+    income: makeNodeComponent("income"),
+    totalincome: makeNodeComponent("totalincome"),
 
     // Metadata about props expected for PlasmicFinancialReports
     internalVariantProps: PlasmicFinancialReports__VariantProps,

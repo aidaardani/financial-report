@@ -2802,6 +2802,19 @@
           "cssFilePath": "plasmic/katibe_nelson/PlasmicFinancialReports.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "1Tzg-xPJwovd",
+          "name": "Settlement",
+          "type": "managed",
+          "projectId": "oFMww5CfyAzvgggjKwbJid",
+          "renderModuleFilePath": "plasmic/katibe_nelson/PlasmicSettlement.tsx",
+          "importSpec": {
+            "modulePath": "Settlement.tsx"
+          },
+          "cssFilePath": "plasmic/katibe_nelson/PlasmicSettlement.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
