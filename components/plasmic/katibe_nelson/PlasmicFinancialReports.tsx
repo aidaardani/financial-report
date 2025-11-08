@@ -1117,41 +1117,25 @@ function PlasmicFinancialReports__RenderFunc(props: {
                   </div>
                 }
                 trigger={
-                  (() => {
-                    try {
-                      return !$ctx.GrowthBook.features[
-                        "transfer-to-another-wallet"
-                      ].hide;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return false;
-                      }
-                      throw e;
+                  <Button
+                    data-plasmic-name={"button"}
+                    data-plasmic-override={overrides.button}
+                    children2={
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text___4WV6S
+                        )}
+                      >
+                        {
+                          "\u0627\u0646\u062a\u0642\u0627\u0644 \u0648\u062c\u0640\u0640\u0647"
+                        }
+                      </div>
                     }
-                  })() ? (
-                    <Button
-                      data-plasmic-name={"button"}
-                      data-plasmic-override={overrides.button}
-                      children2={
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text___4WV6S
-                          )}
-                        >
-                          {
-                            "\u0627\u0646\u062a\u0642\u0627\u0644 \u0648\u062c\u0640\u0640\u0647"
-                          }
-                        </div>
-                      }
-                      className={classNames("__wab_instance", sty.button)}
-                      size={"compact"}
-                    />
-                  ) : null
+                    className={classNames("__wab_instance", sty.button)}
+                    size={"compact"}
+                  />
                 }
               />
 
