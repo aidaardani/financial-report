@@ -19,20 +19,16 @@ export interface GlobalContextsProviderProps {
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthBookProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthBook>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   embedCssProps?: Partial<
     Omit<React.ComponentProps<typeof EmbedCss>, "children">
   >;
-
   antdConfigProviderProps?: Partial<
     Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
   >;
-
   hamdastProps?: Partial<
     Omit<React.ComponentProps<typeof Hamdast>, "children">
   >;
@@ -94,12 +90,12 @@ export default function GlobalContextsProvider(
           defaultApiHost={
             splunkProps && "defaultApiHost" in splunkProps
               ? splunkProps.defaultApiHost!
-              : undefined
+              : "https://nelson-splunk.paziresh24.com"
           }
           defaultApiKey={
             splunkProps && "defaultApiKey" in splunkProps
               ? splunkProps.defaultApiKey!
-              : undefined
+              : "ba586df7-67b1-4ae4-be5a-605d29e37122"
           }
         >
           <EmbedCss

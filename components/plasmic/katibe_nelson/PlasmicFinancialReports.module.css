@@ -6,6 +6,7 @@
   height: auto;
   justify-content: flex-start;
   align-items: center;
+  background: #ffffff;
   min-width: 0;
 }
 .apiGetBookCount:global(.__wab_instance) {
@@ -150,6 +151,7 @@
   max-width: 100%;
   grid-row-gap: 9px;
   grid-column-gap: 10px;
+  background: var(--token-jgohepLVeKvh);
   min-width: 0;
   padding: 8px;
 }
